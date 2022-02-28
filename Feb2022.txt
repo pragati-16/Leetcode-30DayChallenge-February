@@ -1,0 +1,742 @@
+DAY 1:
+
+
+    public class Solution {
+    public int maxProfit(int prices[]) {
+        int minprice = Integer.MAX_VALUE;
+        int maxprofit = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < minprice)
+                minprice = prices[i];
+            else if (prices[i] - minprice > maxprofit)
+                maxprofit = prices[i] - minprice;
+        }
+        return maxprofit;
+    }
+}
+
+DAY 2:
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> ret = new ArrayList<>();
+        int window = p.length();
+        for (int i=0;i<=s.length()-window;i++){
+            String substr = s.substring(i,i+window);
+            if (isAnagram(substr,p)) ret.add(i);
+        }
+        return ret;
+    }
+
+    public boolean isAnagram(String s1, String s2){
+        int [] arr = new int[26];
+        for (int i=0;i<s1.length();i++){
+            arr[s1.charAt(i)-'a']++;
+            arr[s2.charAt(i)-'a']--;
+        }
+        for (int i=0;i<26;i++)if (arr[i]!=0)return false;
+        return true;
+    }
+}
+
+DAY 3:
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+     int count=0;
+        HashMap<Integer,Integer>map=new HashMap<>();
+        for(int i=0;i<nums1.length;i++)
+        {
+            for(int j=0;j<nums2.length;j++)
+            {
+                int sum=nums1[i]+nums2[j];
+				// if sum is already in map then incresing its value by one otherwise its count will be one 
+                map.put(sum,map.getOrDefault(sum,0)+1);
+            }
+        }
+     //   System.out.println(map);
+        for(int i=0;i<nums3.length;i++)
+        {
+            for(int j=0;j<nums4.length;j++)
+            {
+			// accoring to que we have to find  
+			//nums1[l]+nums4[k]+nums3[i]+nums4[j]=0
+			//we already have sum of nums1[l]+nums4[k]
+			//now check if  negative of nums3[i]+nums4[j] present in map
+			//if present in map then increase count by its map value
+                int num=nums3[i]+nums4[j];
+                if(map.containsKey(0-num))
+                {
+                    count+=map.get(0-num);
+                }
+            }
+        }
+        return count;
+}
+}
+
+DAY 4:
+class Solution {
+    public int findMaxLength(int[] nums) {
+         Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        int maxlen = 0, count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            count = count + (nums[i] == 1 ? 1 : -1);
+            if (map.containsKey(count)) {
+                maxlen = Math.max(maxlen, i - map.get(count));
+            } else {
+                map.put(count, i);
+            }
+        }
+        return maxlen; 
+    }
+}
+
+DAY 5:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+    PriorityQueue<Integer> pq=new PriorityQueue<>();
+     for(int i=0;i<lists.length;i++) {
+       ListNode temp=lists[i];
+         while(temp!=null) {
+            pq.add(temp.val);
+             temp=temp.next;
+         }
+     }
+        ListNode head=null;
+        ListNode tail=head;
+        while(!pq.isEmpty())
+        {
+        if(head==null&&tail==null) {
+            head=new ListNode(pq.poll());
+            tail=head;
+        }
+            else
+            {
+            tail.next=new ListNode(pq.poll());
+                tail=tail.next;
+            }
+        }
+        return head;
+    }
+}
+
+DAY 6:
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int i = 2;
+        for (int j = 2; j < nums.length; j++)
+            if (nums[j] != nums[i-2])
+                nums[i++] = nums[j];
+        return i;
+    }
+}
+
+DAY 7:
+class Solution {
+    public char findTheDifference(String s, String t) {
+        HashMap<Character,Integer> map=new HashMap<>();
+        for(int i=0;i<s.length();i++) {
+        map.put(s.charAt(i),map.getOrDefault(s.charAt(i),0)+1);
+        }
+        for(int i=0;i<t.length();i++) {
+        if(!map.containsKey(t.charAt(i)))
+        return t.charAt(i);
+        else {
+        int freq=map.get(t.charAt(i));
+        freq--;
+        if(freq==0)
+        map.remove(t.charAt(i));
+        else 
+        map.put(t.charAt(i),freq);
+        }
+        }
+        return t.charAt(0);
+    }
+}
+
+DAY 8:
+class Solution {
+    public int digits(int s) {
+    int count=(int)Math.floor(Math.log10(s) + 1);
+    if(count==1)
+     return s;
+    else 
+    return sum(s);
+    } 
+    public int sum(int n) {
+        int s=0;
+        while(n!=0) {
+            s=s+n%10;
+            n=n/10;
+        }
+        return digits(s);
+    }
+    public int addDigits(int num) {
+        if(num==0)
+        return 0;
+        return sum(num);
+    }
+}
+
+DAY 9:
+class Solution {
+    public int findPairs(int[] nums, int k) {
+        
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i < nums.length; i++){
+            if(map.containsKey(nums[i])){
+                // the array element and  increament the frequence by 1
+                map.put(nums[i], map.get(nums[i]) + 1);
+            } else {
+                // keep the frequene of current element as 1
+                map.put(nums[i], 1);
+            }
+        }
+        int count = 0;
+        //create key set
+        Set<Integer> set = map.keySet();
+        for(int num: set){
+            //first check
+            if(k > 0 &&map.containsKey(num + k)){
+                count++;
+            }
+            // second check
+            if(k==0 && map.get(num) > 1){
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+DAY 10:
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int count = 0, sum = 0;
+        HashMap < Integer, Integer > map = new HashMap < > ();
+        map.put(0, 1);
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (map.containsKey(sum - k))
+                count += map.get(sum - k);
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return count;
+    }
+}
+
+
+DAY 11:
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        HashMap<Character, Integer> map = new HashMap();
+        HashMap<Character, Integer> cntMap = new HashMap();
+        for (int i=0; i<s1.length(); i++) {
+            map.put(s1.charAt(i), map.getOrDefault(s1.charAt(i), 0)+1);
+        }
+        if (s1 == null || s2 == null || s1.length() > s2.length()) {
+            return false;
+        }
+        for (int i=0; i<s1.length(); i++) {
+            cntMap.put(s2.charAt(i), cntMap.getOrDefault(s2.charAt(i), 0)+1);
+        }
+        if (isPermutation(map, cntMap)) {
+            return true;
+        }
+        for (int i=s1.length(); i<s2.length(); i++) {
+            cntMap.put(s2.charAt(i-s1.length()), cntMap.getOrDefault(s2.charAt(i-s1.length()), 0)-1);
+            if (cntMap.get(s2.charAt(i-s1.length())) == 0) {
+                cntMap.remove(s2.charAt(i-s1.length()));
+            }
+            cntMap.put(s2.charAt(i), cntMap.getOrDefault(s2.charAt(i), 0)+1);
+            if (isPermutation(map, cntMap)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isPermutation(HashMap<Character, Integer> pattern, HashMap<Character, Integer> cnt) {
+        for (char key : pattern.keySet()) {
+            if (pattern.get(key).intValue() != cnt.getOrDefault(key, -1).intValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+DAY 12:
+class Solution {
+  public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+
+    // Since all words are of same length.
+    int L = beginWord.length();
+
+    // Dictionary to hold combination of words that can be formed,
+    // from any given word. By changing one letter at a time.
+    Map<String, List<String>> allComboDict = new HashMap<>();
+
+    wordList.forEach(
+        word -> {
+          for (int i = 0; i < L; i++) {
+            // Key is the generic word
+            // Value is a list of words which have the same intermediate generic word.
+            String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+            List<String> transformations = allComboDict.getOrDefault(newWord, new ArrayList<>());
+            transformations.add(word);
+            allComboDict.put(newWord, transformations);
+          }
+        });
+
+    // Queue for BFS
+    Queue<Pair<String, Integer>> Q = new LinkedList<>();
+    Q.add(new Pair(beginWord, 1));
+
+    // Visited to make sure we don't repeat processing same word.
+    Map<String, Boolean> visited = new HashMap<>();
+    visited.put(beginWord, true);
+
+    while (!Q.isEmpty()) {
+      Pair<String, Integer> node = Q.remove();
+      String word = node.getKey();
+      int level = node.getValue();
+      for (int i = 0; i < L; i++) {
+
+        // Intermediate words for current word
+        String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+
+        // Next states are all the words which share the same intermediate state.
+        for (String adjacentWord : allComboDict.getOrDefault(newWord, new ArrayList<>())) {
+          // If at any point if we find what we are looking for
+          // i.e. the end word - we can return with the answer.
+          if (adjacentWord.equals(endWord)) {
+            return level + 1;
+          }
+          // Otherwise, add it to the BFS Queue. Also mark it visited
+          if (!visited.containsKey(adjacentWord)) {
+            visited.put(adjacentWord, true);
+            Q.add(new Pair(adjacentWord, level + 1));
+          }
+        }
+      }
+    }
+
+    return 0;
+  }
+}
+
+DAY 13:
+class Solution {
+    
+    List<List<Integer>> allSubset = new ArrayList<>();
+    public List<List<Integer>> subsets(int[] nums) {
+        List<Integer> subSet = new ArrayList<>();
+        findSubsets(nums, 0, subSet);
+        return allSubset;
+    }
+    
+    public void findSubsets(int[] nums, int index, List<Integer> subSet){
+        allSubset.add(subSet);
+        for(int i=index; i<nums.length; i++){
+            List<Integer> newSubset = new ArrayList<>(subSet);
+            newSubset.add(nums[i]);
+            findSubsets(nums, i+1, newSubset);
+        }
+    }
+}
+
+DAY 14:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root==null)
+        return 0;
+        if(root.left==null&&root.right==null)
+        return 1;
+        return 1+Math.max(maxDepth(root.left),maxDepth(root.right));
+    }
+}
+
+DAY 15:
+class Solution {
+    public int singleNumber(int[] nums) {
+        int xor=0;
+        for(int i=0;i<nums.length;i++)
+            xor=xor^nums[i];
+        return xor;
+    }
+}
+
+DAY 16:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+         if(head == null || head.next == null)   return head;
+        int tmp = head.next.val;
+        head.next.val = head.val;
+        head.val = tmp;
+        head.next.next = swapPairs(head.next.next);
+        return head;
+    }
+}
+
+DAY 17:
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        
+        List<List<Integer>> ans = new ArrayList<List<Integer>>();
+        
+        rec(ans,0,target,candidates,new ArrayList());
+            
+        return ans;
+        
+    }
+    
+    public void rec(List<List<Integer>> ans, int ind, int target, int[] candidates, List<Integer> list){
+        
+        if(ind >= candidates.length)return;
+        if(target ==0){
+            ans.add(new ArrayList<Integer>(list));return;
+        }
+        
+        if(candidates[ind] <=target){
+            
+            list.add(candidates[ind]);
+            
+            rec(ans,ind,target - candidates[ind],candidates,list);
+            
+            list.remove(list.size()-1);
+            
+            
+        } 
+        rec(ans,ind+1,target,candidates,list);
+    }
+}
+
+DAY 18:
+class Solution {
+    public String removeKdigits(String num, int k) {
+        Stack<Character> stack = new Stack<>();
+        for(char c : num.toCharArray()){
+            while(!stack.isEmpty() && k > 0 && stack.peek() > c) {
+                stack.pop();
+                k--;
+            }   
+            stack.push(c);   
+        }
+        while(!stack.isEmpty() && k > 0){
+            stack.pop();
+            k--;
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!stack.isEmpty()){
+            sb.append(stack.pop());
+        }
+        sb.reverse();
+        while(sb.length() > 1 && sb.charAt(0) == '0'){
+            sb.deleteCharAt(0);
+        }
+        return sb.length() > 0 ? sb.toString() : "0";
+    }
+}
+
+DAY 19:
+class Solution {
+    public int minimumDeviation(int[] nums) {
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        int min = Integer.MAX_VALUE;
+        
+        for(int i : nums){
+            if(i % 2 == 1) i *= 2;
+            
+            pq.add(i);
+            min = Math.min(min, i);
+        }
+        int diff = Integer.MAX_VALUE;
+        
+        while(pq.peek() % 2 == 0){
+            int max = pq.remove();
+            diff = Math.min(diff, max - min);
+            
+            max /= 2;
+            min = Math.min(min, max);
+            pq.add(max);
+        }
+        return Math.min(diff, pq.peek() - min);
+    }
+}
+
+DAY 20:
+class Solution {
+    public int removeCoveredIntervals(int[][] intervals) {
+        int pairs = intervals.length;
+        boolean[] check = new boolean[pairs];
+        for(int i = 0; i< pairs ;i++){
+            if(!check[i]){
+                for(int j = i+1;j<pairs;j++){
+                    if(!check[j]){
+                        if(intervals[i][0]<=intervals[j][0] && intervals[j][1]<=intervals[i][1]){
+                            check[j] = true;
+                        }
+                        else if(intervals[i][0]>=intervals[j][0] && intervals[j][1]>=intervals[i][1]){
+                            check[i] = true;
+                        }
+                    }
+                }
+            }
+        }
+        int ans = 0;
+        for(boolean b : check){
+            if(!b){
+                ans++;
+            }
+        }
+        return ans;
+    }
+}
+
+DAY 21:
+class Solution {
+    public int majorityElement(int[] nums) {
+     HashMap<Integer,Integer> map=new HashMap<>();
+         for(int i=0;i<nums.length;i++)
+         {
+    if(map.containsKey(nums[i]))
+    {
+    map.put(nums[i],map.get(nums[i])+1);
+    }
+             else 
+                 map.put(nums[i],1);
+         }
+        int f=nums.length/2;
+        int ans=0;
+    for(Map.Entry<Integer,Integer> entry:map.entrySet())
+    {
+      if(entry.getValue()>f) {
+         ans=entry.getKey();
+          break;
+      }
+    }
+        return ans;
+    }
+}
+
+DAY 22:
+class Solution {
+    public int titleToNumber(String s) {
+        return s.length()==0?0:(s.charAt(s.length()-1)-'A'+1)+26*titleToNumber(s.substring(0, s.length()-1));
+    }
+}
+
+DAY 23:
+class Solution {
+    public Node cloneGraph(Node node) {
+        return cloneGraphDFSHelper(node, new HashMap<>());
+    }
+
+    private Node cloneGraphDFSHelper(Node cur, HashMap<Node, Node> visited) {
+        if (cur == null) {
+            return null;
+        }
+        if (visited.containsKey(cur)) {
+            return visited.get(cur);
+        }
+
+        Node newNode = new Node(cur.val);
+        visited.put(cur, newNode);
+
+        for (Node n : cur.neighbors) {
+            newNode.neighbors.add(cloneGraphDFSHelper(n, visited));
+        }
+
+        return newNode;
+    }
+}
+
+DAY 24:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode sortList(ListNode head) {
+        if(head==null||head.next==null)
+            return head;
+          ArrayList<Integer> al=new ArrayList<>();
+        while(head!=null)
+        {
+        al.add(head.val);
+        head=head.next;
+        }
+        Collections.sort(al);
+    //    ListNode head=null;
+        ListNode tail=null;
+        for(int i=0;i<al.size();i++) {
+        if(head==null&&tail==null)
+        {
+        head=new ListNode(al.get(i));
+        tail=head;
+        }
+            else {
+            tail.next=new ListNode(al.get(i));
+            tail=tail.next;
+            }
+        }
+        return head;
+        }
+}
+
+
+DAY 25:
+class Solution {
+public int compareVersion(String version1, String version2) {
+     String arr1[] = version1.split("\\.");
+    String arr2[] = version2.split("\\.");
+    int max = Math.max(arr1.length,arr2.length);
+    for (int i =0; i<max; i++){
+        int fake1= (i>=arr1.length)? 0: Integer.parseInt(arr1[i]);
+        int fake2= (i>=arr2.length)? 0: Integer.parseInt(arr2[i]);
+    if(fake1>fake2)
+        return 1;
+        else if(fake1<fake2)
+            return -1;
+    }
+    return 0;
+}
+}
+
+DAY 26:
+class Solution {
+    public int shortestPathLength(int[][] graph) {
+        int size = graph.length;
+        int target = (1 << size) - 1;
+        boolean[][] visited = new boolean[size][target];
+        Queue<int[]> queue = new ArrayDeque<>();
+        for (int i = 0; i < size; ++i) {
+            queue.offer(new int[]{i, 1 << i});
+        }
+        int step = 0;
+        while (!queue.isEmpty()) {
+            int n = queue.size();
+            for (int i = 0; i < n; ++i) {
+                int[] cur = queue.poll();
+                int node = cur[0];
+                int state = cur[1];
+                if (state == target) {
+                    return step;
+                }
+                if (visited[node][state]) {
+                    continue;
+                }
+                visited[node][state] = true;
+                for (int next : graph[node]) {
+                    queue.offer(new int[]{next, state | (1 << next)});
+                }
+            }
+            step++;
+        }
+        return -1;
+    }
+}
+
+DAY 27:
+class Solution {
+    class Pair{
+        TreeNode node;
+        int i;
+        public Pair(TreeNode node,int i){
+            this.node=node;
+            this.i=i;
+        }
+    }
+    public int widthOfBinaryTree(TreeNode root) {
+        Queue<Pair> q=new LinkedList<>();
+        q.add(new Pair(root,1));
+        int maxw=1;
+        while(!q.isEmpty()){
+            int size=q.size();
+            int start=0,end=0;
+            while(size-->0){
+                Pair front=q.poll();
+                if(start==0){
+                    start=front.i;
+                }
+                end=front.i;
+                if(front.node.left!=null){
+                    q.add(new Pair(front.node.left,front.i*2));
+                }
+                if(front.node.right!=null){
+                    q.add(new Pair(front.node.right,front.i*2+1));
+                }
+            }
+            maxw=Math.max(maxw,end-start+1);
+        }
+        return maxw;
+    }
+}
+
+DAY 28:
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+      List<String> list = new ArrayList<>();
+		//loop every element
+        for(int i=0;i<nums.length;i++) {
+			//start element
+            int start=nums[i];
+			//iterate till current element +1 equals next element
+            while(i<nums.length-1 && nums[i]+1==nums[i+1]) {
+                i++;
+            }
+			//add only start, if above loop condition does not met
+            if(start==nums[i]) {
+                list.add(String.valueOf(start));
+            } else {
+				//else it means answer exists and add start+"->+nums[i] to answer
+                list.add(start+"->"+nums[i]);                            
+            }
+        }
+		//return list of intervals
+        return list;   
+    }
+}
